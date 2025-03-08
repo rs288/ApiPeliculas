@@ -120,9 +120,23 @@ namespace PeliculasWeb.Repositorio
                 return false;
             }
         }
-        public Task<IEnumerable> Buscar(string url, string nombre)
+        public async Task<IEnumerable> Buscar(string url, string nombre)
         {
-            throw new NotImplementedException();
+            var peticion = new HttpRequestMessage(HttpMethod.Get, url + nombre);
+
+            var cliente = _clientFactory.CreateClient();
+
+            HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+            if (respuesta.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var jsonString = await respuesta.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<bool> CrearAsync(string url, T itemCrear)
@@ -211,19 +225,61 @@ namespace PeliculasWeb.Repositorio
             }
         }
 
-        public Task<T> GetAsync(string url, int Id)
+        public async Task<T> GetAsync(string url, int Id)
         {
-            throw new NotImplementedException();
+            var peticion = new HttpRequestMessage(HttpMethod.Get, url + Id);
+
+            var cliente = _clientFactory.CreateClient();
+
+            HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+            if (respuesta.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var jsonString = await respuesta.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<T>(jsonString);
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public Task<IEnumerable> GetPeliculasEnCategoriaAsync(string url, int categoriaId)
+        public async Task<IEnumerable> GetPeliculasEnCategoriaAsync(string url, int categoriaId)
         {
-            throw new NotImplementedException();
+            var peticion = new HttpRequestMessage(HttpMethod.Get, url + categoriaId);
+
+            var cliente = _clientFactory.CreateClient();
+
+            HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+            if (respuesta.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var jsonString = await respuesta.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public Task<IEnumerable> GetTodoAsync(string url)
+        public async Task<IEnumerable> GetTodoAsync(string url)
         {
-            throw new NotImplementedException();
+            var peticion = new HttpRequestMessage(HttpMethod.Get, url);
+
+            var cliente = _clientFactory.CreateClient();
+
+            HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+            if (respuesta.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var jsonString = await respuesta.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<IEnumerable<T>>(jsonString);
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }
