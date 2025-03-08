@@ -102,19 +102,113 @@ namespace PeliculasWeb.Repositorio
             }
         }
 
+        public async Task<bool> BorrarAsync(string url, int id)
+        {
+            var peticion = new HttpRequestMessage(HttpMethod.Delete, url);
+
+            var cliente = _clientFactory.CreateClient();
+
+            HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+            //Validar si se actualizo y retorna boleano
+            if (respuesta.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public Task<IEnumerable> Buscar(string url, string nombre)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> CrearAsync(string url, T itemCrear)
+        public async Task<bool> CrearAsync(string url, T itemCrear)
         {
-            throw new NotImplementedException();
+            var peticion = new HttpRequestMessage(HttpMethod.Post, url);
+
+            if (itemCrear != null)
+            {
+                peticion.Content = new StringContent(
+                    JsonConvert.SerializeObject(itemCrear), Encoding.UTF8, "application/json"
+                    );
+            }
+            else
+            {
+                return false;
+            }
+
+            var cliente = _clientFactory.CreateClient();
+
+            HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+            //Validar si se actualizo y retorna boleano
+            if (respuesta.StatusCode == System.Net.HttpStatusCode.Created)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public Task<bool> CrearPeliculaAsync(string url, T peliculaCrear)
+        public async Task<bool> CrearPeliculaAsync(string url, T peliculaCrear)
         {
-            throw new NotImplementedException();
+            var peticion = new HttpRequestMessage(HttpMethod.Post, url);
+            // Se instancia MultipartFormDataContent, que permite enviar datos en formato multipart/form-data, 
+            // comúnmente usado para cargar archivos junto con datos de formulario.
+            var multipartContent = new MultipartFormDataContent();
+
+            if (peliculaCrear != null)
+            {
+                // Serializar cada propiedad de peliculaActualizar y añadirla al contenido
+                // multipart/form-data
+                foreach (var property in typeof(T).GetProperties())
+                {
+                    var value = property.GetValue(peliculaCrear);
+                    if (value != null)
+                    {
+                        if (property.PropertyType == typeof(IFormFile))
+                        {
+                            var file = value as IFormFile;
+                            if (file != null)
+                            {
+                                var streamContent = new StreamContent(file.OpenReadStream());
+                                streamContent.Headers.ContentType =
+                                    new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                                multipartContent.Add(streamContent, property.Name, file.FileName);
+                            }
+                        }
+                        else
+                        {
+                            var stringContent = new StringContent(value.ToString());
+                            multipartContent.Add(stringContent, property.Name);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            peticion.Content = multipartContent;
+            var cliente = _clientFactory.CreateClient();
+
+            HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+            //Validar si se actualizo y retorna boleano
+            if (respuesta.StatusCode == System.Net.HttpStatusCode.Created)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public Task<T> GetAsync(string url, int Id)

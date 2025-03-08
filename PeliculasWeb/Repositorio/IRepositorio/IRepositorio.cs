@@ -8,6 +8,7 @@ namespace PeliculasWeb.Repositorio.IRepositorio
     {
         Task<IEnumerable> GetTodoAsync(string url); // metodo generico
         Task<IEnumerable> GetPeliculasEnCategoriaAsync(string url, int categoriaId); //metodo con subida de archivos
+        Task<bool> BorrarAsync(string url, int Id);
         Task<IEnumerable> Buscar(string url, string nombre);
         Task<T> GetAsync(string url, int Id);
         Task<bool> CrearAsync(string url, T itemCrear);
