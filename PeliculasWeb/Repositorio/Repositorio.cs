@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using PeliculasWeb.Repositorio.IRepositorio;
 using System.Collections;
+using System.Net.Http;
 using System.Text;
 
 namespace PeliculasWeb.Repositorio
@@ -45,9 +46,60 @@ namespace PeliculasWeb.Repositorio
             }
         }
 
-        public Task<bool> ActualizarPeliculaAsync(string url, T peliculaActualizar)
+        public async Task<bool> ActualizarPeliculaAsync(string url, T peliculaActualizar)
         {
-            throw new NotImplementedException();
+            var peticion = new HttpRequestMessage(HttpMethod.Patch, url);
+            // Se instancia MultipartFormDataContent, que permite enviar datos en formato multipart/form-data, 
+            // comúnmente usado para cargar archivos junto con datos de formulario.
+            var multipartContent = new MultipartFormDataContent();
+
+            if (peliculaActualizar != null)
+            {
+                // Serializar cada propiedad de peliculaActualizar y añadirla al contenido
+                // multipart/form-data
+                foreach (var property in typeof(T).GetProperties())
+                {
+                    var value = property.GetValue(peliculaActualizar);
+                    if (value != null)
+                    {
+                        if (property.PropertyType == typeof(IFormFile))
+                        {
+                            var file = value as IFormFile;
+                            if (file != null)
+                            {
+                                var streamContent = new StreamContent(file.OpenReadStream());
+                                streamContent.Headers.ContentType =
+                                    new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                                multipartContent.Add(streamContent, property.Name, file.FileName);
+                            }
+                        }
+                        else
+                        {
+                            var stringContent = new StringContent(value.ToString());
+                            multipartContent.Add(stringContent, property.Name);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+            peticion.Content = multipartContent;
+            var cliente = _clientFactory.CreateClient();
+
+            HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+            //Validar si se actualizo y retorna boleano
+            if (respuesta.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public Task<IEnumerable> Buscar(string url, string nombre)
