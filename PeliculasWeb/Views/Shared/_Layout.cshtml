@@ -48,7 +48,7 @@
                         httpAcc.HttpContext.Session.GetString("JWToken").ToString().Length > 0)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">salir</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">@httpAcc.HttpContext.Session.GetString("Usuario") - Salir</a>
                             </li>
                         }
                         else

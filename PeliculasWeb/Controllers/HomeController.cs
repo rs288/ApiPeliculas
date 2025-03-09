@@ -1,16 +1,23 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using PeliculasWeb.Models;
+using PeliculasWeb.Repositorio.IRepositorio;
+using PeliculasWeb.Utilidades;
 
 namespace PeliculasWeb.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    //private readonly ILogger<HomeController> _logger;
+    private readonly IAccountRepositorio _accRepo;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IAccountRepositorio accRepo)//ILogger<HomeController> logger)
     {
-        _logger = logger;
+       // _logger = logger;
+       _accRepo = accRepo;
     }
 
     public IActionResult Index()
@@ -18,6 +25,41 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet]
+    public IActionResult Login()
+    {
+        UsuarioAuth usuario = new UsuarioAuth();
+        return View(usuario);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Login(UsuarioAuth obj)
+    {
+        if (ModelState.IsValid)
+        {
+            UsuarioAuth objUser = await _accRepo.LoginAsync(CT.RutaUsuariosApi + "Login", obj);
+            if (objUser.Token == null)
+            {
+                TempData["alert"] = "Los datos son incorrectos";
+                return View();
+            }
+
+            var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim(ClaimTypes.Email, objUser.NombreUsuario));
+
+            var principal = new ClaimsPrincipal(identity);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            HttpContext.Session.SetString("JWToken", objUser.Token);
+            HttpContext.Session.SetString("Usuario", objUser.NombreUsuario);
+
+            return RedirectToAction("Index");
+        }
+        else
+        {
+            return View();
+        }
+    }
     public IActionResult Privacy()
     {
         return View();
