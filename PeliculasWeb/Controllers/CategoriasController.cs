@@ -31,5 +31,16 @@ namespace PeliculasWeb.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Create(Categoria categoria)
+        {
+            if (ModelState.IsValid)
+            {
+                _repoCategoria.CrearAsync(CT.RutaCategoriasApi, categoria);
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
     }
 }
