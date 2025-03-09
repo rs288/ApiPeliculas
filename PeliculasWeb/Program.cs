@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using PeliculasWeb.Repositorio;
 using PeliculasWeb.Repositorio.IRepositorio;
 
@@ -26,6 +27,9 @@ builder.Services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
 builder.Services.AddScoped<IPeliculaRepositorio, PeliculaRepositorio>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 builder.Services.AddScoped<IAccountRepositorio, AccountRepositorio>();
+
+//Se debe registrar este para que el HTTPCONTEXTACCESOR que esta en _layout funcione
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 //Agregar session
 builder.Services.AddSession(options =>
