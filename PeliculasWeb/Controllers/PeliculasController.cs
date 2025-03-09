@@ -166,5 +166,11 @@ namespace PeliculasWeb.Controllers
 
             return Json(new { success = false, message = "No se pudo borrar" });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPeliculasEnCategoria(int id)
+        {
+            return Json(new { data = await _repoPelicula.GetPeliculasEnCategoriaAsync(CT.RutaPeliculasEnCategoriaApi, id)});
+        }
     }
 }

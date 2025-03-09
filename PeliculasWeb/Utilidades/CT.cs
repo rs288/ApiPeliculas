@@ -8,5 +8,6 @@
         public static string RutaUsuariosApi = UrlBaseApi + "api/v1/Usuarios/";
 
         ///Faltan otras rutas para buscar y filtrar películas por categorías
+        public static string RutaPeliculasEnCategoriaApi = UrlBaseApi + "api/v1/Peliculas/GetPeliculasEnCategoria/";
     }
 }
