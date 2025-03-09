@@ -47,5 +47,41 @@ namespace PeliculasWeb.Controllers
 
             return View(objVM);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Pelicula pelicula)
+        {
+
+            IEnumerable<Categoria> ctList = (IEnumerable<Categoria>)await _repoCategoria.GetTodoAsync(CT.RutaCategoriasApi);
+
+            PeliculasVM objVM = new PeliculasVM()
+            {
+                ListaCategorias = ctList.Select(i => new SelectListItem
+                {
+                    Text = i.Nombre,
+                    Value = i.Id.ToString()
+                }),
+
+                Pelicula = new Pelicula()
+            };
+
+            if (ModelState.IsValid)
+            {
+                var files = HttpContext.Request.Form.Files;
+                if (files.Count > 0)
+                {
+                    pelicula.Imagen = files[0]; // Asignar el IFormFile directamente a la propiedad Imagen
+                }
+                else
+                {
+                    return View(objVM);
+                }
+
+                await _repoPelicula.CrearPeliculaAsync(CT.RutaPeliculasApi, pelicula);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(objVM);
+        }
     }
 }
