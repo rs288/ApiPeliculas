@@ -25,7 +25,7 @@ function loadDataTable() {
                 "data": "id",
                 "render": function (data) {
                     return `<div class="text-center">
-                                <a href="/Categorias/iTed/${data}" class="btn btn-success text-white" style="cursor-pointer;">
+                                <a href="/Categorias/Edit/${data}" class="btn btn-success text-white" style="cursor-pointer;">
                                     <i class="fas fa-edit"></i> Editar
                                 </a>
                                 &nbsp;
