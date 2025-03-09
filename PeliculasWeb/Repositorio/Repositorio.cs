@@ -104,7 +104,7 @@ namespace PeliculasWeb.Repositorio
 
         public async Task<bool> BorrarAsync(string url, int id)
         {
-            var peticion = new HttpRequestMessage(HttpMethod.Delete, url);
+            var peticion = new HttpRequestMessage(HttpMethod.Delete, url + id);
 
             var cliente = _clientFactory.CreateClient();
 

@@ -76,5 +76,18 @@ namespace PeliculasWeb.Controllers
 
             return View();
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var status = await _repoCategoria.BorrarAsync(CT.RutaCategoriasApi, id);
+
+            if (status)
+            {
+                return Json(new { success = true, message = "Borrado correctamente" });
+            }
+
+            return Json(new { success = false, message = "No se pudo borrar" });
+        }
     }
 }
