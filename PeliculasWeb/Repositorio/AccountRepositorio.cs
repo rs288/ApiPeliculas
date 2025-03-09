@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using PeliculasWeb.Models;
+using PeliculasWeb.Repositorio.IRepositorio;
 using System.Text;
 
 namespace PeliculasWeb.Repositorio
 {
-    public class AccountRepositorio
+    public class AccountRepositorio : Repositorio<UsuarioAuth>, IAccountRepositorio
     {
         //Injección de dependencias se debe importar el IHttpClientFactory
         private readonly IHttpClientFactory _clientFactory;
@@ -13,6 +14,7 @@ namespace PeliculasWeb.Repositorio
         {
             _clientFactory = clientFactory;
         }
+
 
         public async Task<UsuarioAuth> LoginAsync(string url, UsuarioAuth itemCrear)
         {
@@ -85,4 +87,5 @@ namespace PeliculasWeb.Repositorio
                 return false;
             }
         }
+    }
 }
