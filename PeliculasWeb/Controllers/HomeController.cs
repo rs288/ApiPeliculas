@@ -80,6 +80,24 @@ public class HomeController : Controller
         return RedirectToAction("Login");
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Logout()
+    {
+        // Cierra la sesión de autenticación
+        await HttpContext.SignOutAsync();
+
+        // Limpia la sesión de usuario, incluyendo cualquier token
+        HttpContext.Session.Clear();
+
+        // Elimina la cookie de sesión manualmente
+        if (Request.Cookies.ContainsKey(".AspNetCore.Session"))
+        {
+            Response.Cookies.Delete(".AspNetCore.Session");
+        }
+
+        return RedirectToAction("Index");
+    }
+
     public IActionResult Privacy()
     {
         return View();
