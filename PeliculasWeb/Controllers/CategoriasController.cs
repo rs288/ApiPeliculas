@@ -25,5 +25,11 @@ namespace PeliculasWeb.Controllers
         {
             return Json(new { data = await _repoCategoria.GetTodoAsync(CT.RutaCategoriasApi) });
         }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
