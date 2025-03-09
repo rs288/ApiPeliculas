@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PeliculasWeb.Models;
 using PeliculasWeb.Repositorio.IRepositorio;
+using PeliculasWeb.Utilidades;
 
 namespace PeliculasWeb.Controllers
 {
@@ -17,6 +18,12 @@ namespace PeliculasWeb.Controllers
         public IActionResult Index()
         {
             return View(new Categoria() { });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTodasCategorias()
+        {
+            return Json(new { data = await _repoCategoria.GetTodoAsync(CT.RutaCategoriasApi) });
         }
     }
 }
