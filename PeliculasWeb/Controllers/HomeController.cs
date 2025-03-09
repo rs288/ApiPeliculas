@@ -60,6 +60,26 @@ public class HomeController : Controller
             return View();
         }
     }
+
+    [HttpGet]
+    public IActionResult Registro()
+    {
+        return View();
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Registro(UsuarioAuth obj)
+    {
+        bool result = await _accRepo.RegisterAsync(CT.RutaUsuariosApi + "Registro", obj);
+        if (result == false)
+        {
+            return View();
+        }
+
+        TempData["alert"] = "Registro Correcto";
+        return RedirectToAction("Login");
+    }
+
     public IActionResult Privacy()
     {
         return View();
