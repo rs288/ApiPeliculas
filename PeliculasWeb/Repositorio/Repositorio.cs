@@ -16,7 +16,7 @@ namespace PeliculasWeb.Repositorio
             _clientFactory = clientFactory;
         }
 
-        public async Task<bool> ActualizarAsync(string url, T itemActualizar)
+        public async Task<bool> ActualizarAsync(string url, T itemActualizar, string token = "")
         {
             var peticion = new HttpRequestMessage(HttpMethod.Patch, url);
 
@@ -33,6 +33,15 @@ namespace PeliculasWeb.Repositorio
 
             var cliente = _clientFactory.CreateClient();
 
+            //Aquí valida token
+            if (string.IsNullOrEmpty(token))
+            {
+                return false;
+            }
+
+            // Asigna el token al encabezado de autorización
+            cliente.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
             HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
 
             //Validar si se actualizo y retorna boleano
@@ -46,7 +55,7 @@ namespace PeliculasWeb.Repositorio
             }
         }
 
-        public async Task<bool> ActualizarPeliculaAsync(string url, T peliculaActualizar)
+        public async Task<bool> ActualizarPeliculaAsync(string url, T peliculaActualizar, string token = "")
         {
             var peticion = new HttpRequestMessage(HttpMethod.Patch, url);
             // Se instancia MultipartFormDataContent, que permite enviar datos en formato multipart/form-data, 
@@ -102,11 +111,20 @@ namespace PeliculasWeb.Repositorio
             }
         }
 
-        public async Task<bool> BorrarAsync(string url, int id)
+        public async Task<bool> BorrarAsync(string url, int id, string token = "")
         {
             var peticion = new HttpRequestMessage(HttpMethod.Delete, url + id);
 
             var cliente = _clientFactory.CreateClient();
+
+            //Aquí valida token
+            if (string.IsNullOrEmpty(token))
+            {
+                return false;
+            }
+
+            // Asigna el token al encabezado de autorización
+            cliente.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
 
@@ -139,7 +157,7 @@ namespace PeliculasWeb.Repositorio
             }
         }
 
-        public async Task<bool> CrearAsync(string url, T itemCrear)
+        public async Task<bool> CrearAsync(string url, T itemCrear, string token = "")
         {
             var peticion = new HttpRequestMessage(HttpMethod.Post, url);
 
@@ -156,6 +174,15 @@ namespace PeliculasWeb.Repositorio
 
             var cliente = _clientFactory.CreateClient();
 
+            //Aquí valida token
+            if (string.IsNullOrEmpty(token))
+            {
+                return false;
+            }
+
+            // Asigna el token al encabezado de autorización
+            cliente.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
             HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
 
             //Validar si se actualizo y retorna boleano
@@ -169,7 +196,7 @@ namespace PeliculasWeb.Repositorio
             }
         }
 
-        public async Task<bool> CrearPeliculaAsync(string url, T peliculaCrear)
+        public async Task<bool> CrearPeliculaAsync(string url, T peliculaCrear, string token = "")
         {
             var peticion = new HttpRequestMessage(HttpMethod.Post, url);
             // Se instancia MultipartFormDataContent, que permite enviar datos en formato multipart/form-data, 
@@ -211,6 +238,15 @@ namespace PeliculasWeb.Repositorio
 
             peticion.Content = multipartContent;
             var cliente = _clientFactory.CreateClient();
+
+            //Aquí valida token
+            if (string.IsNullOrEmpty(token))
+            {
+                return false;
+            }
+
+            // Asigna el token al encabezado de autorización
+            cliente.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
             HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
 

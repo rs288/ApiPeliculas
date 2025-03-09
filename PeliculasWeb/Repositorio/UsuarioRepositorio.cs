@@ -1,4 +1,5 @@
-﻿using PeliculasWeb.Models;
+﻿using Microsoft.AspNetCore.Authorization;
+using PeliculasWeb.Models;
 using PeliculasWeb.Repositorio.IRepositorio;
 
 namespace PeliculasWeb.Repositorio

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 using PeliculasWeb.Models;
 using PeliculasWeb.Repositorio.IRepositorio;
 
