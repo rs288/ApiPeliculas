@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using PeliculasWeb.Models;
 using PeliculasWeb.Repositorio.IRepositorio;
 using PeliculasWeb.Utilidades;
+using PeliculasWeb.Models.ViewModels;
 
 namespace PeliculasWeb.Controllers;
 
@@ -13,16 +14,28 @@ public class HomeController : Controller
 {
     //private readonly ILogger<HomeController> _logger;
     private readonly IAccountRepositorio _accRepo;
+    private readonly ICategoriaRepositorio _repoCategoria;
+    private readonly IPeliculaRepositorio _repoPelicula;
 
-    public HomeController(IAccountRepositorio accRepo)//ILogger<HomeController> logger)
+    public HomeController(IAccountRepositorio accRepo, ICategoriaRepositorio repoCategoria, IPeliculaRepositorio repoPelicula)//ILogger<HomeController> logger)
     {
        // _logger = logger;
        _accRepo = accRepo;
+       _repoCategoria = repoCategoria;
+       _repoPelicula = repoPelicula;
     }
 
-    public IActionResult Index()
+    //V1 de Controlador
+    [HttpGet]
+    public async Task<IActionResult> Index()
     {
-        return View();
+        IndexVM listaPeliculasCategorias = new IndexVM()
+        {
+            ListaCategorias = (IEnumerable<Categoria>)await _repoCategoria.GetTodoAsync(CT.RutaCategoriasApi),
+            ListaPeliculas = (IEnumerable<Pelicula>)await _repoPelicula.GetPeliculasTodoAsync(CT.RutaPeliculasApi)
+        };
+
+        return View(listaPeliculasCategorias);
     }
 
     [HttpGet]
