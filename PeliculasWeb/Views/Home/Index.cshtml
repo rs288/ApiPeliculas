@@ -24,6 +24,17 @@
         </div>
     </div>
 
+    <div class="col-4 ms-auto">
+        <div class="dropdown">
+            <form asp-action="IndexBusqueda" class="d-flex">
+                <input type="search" name="nombre" placeholder="Buscar Película" class="form-control me-2" />
+                <button class="btn btn-outline-success" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
 <div class="row mt-3">
     @if (Model.ListaPeliculas?.Count() > 0)
     {

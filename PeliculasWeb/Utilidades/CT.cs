@@ -9,5 +9,6 @@
 
         ///Faltan otras rutas para buscar y filtrar películas por categorías
         public static string RutaPeliculasEnCategoriaApi = UrlBaseApi + "api/v1/Peliculas/GetPeliculasEnCategoria/";
+        public static string RutaPeliculasBusquedaApi = UrlBaseApi + "api/v1/Peliculas/Buscar?nombre=";
     }
 }

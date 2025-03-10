@@ -39,6 +39,22 @@ public class HomeController : Controller
     }
 
     [HttpGet]
+    public async Task<IActionResult> IndexCategoria(int id)
+    {
+        var pelisEnCategoria = await _repoPelicula.GetPeliculasEnCategoriaAsync(CT.RutaPeliculasEnCategoriaApi, id);
+
+        return View(pelisEnCategoria);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> IndexBusqueda(string nombre)
+    {
+        var pelisEncontradas = await _repoPelicula.Buscar(CT.RutaPeliculasBusquedaApi, nombre);
+
+        return View(pelisEncontradas);
+    }
+
+    [HttpGet]
     public IActionResult Login()
     {
         UsuarioAuth usuario = new UsuarioAuth();
