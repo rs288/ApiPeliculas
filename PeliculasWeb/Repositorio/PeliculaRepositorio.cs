@@ -16,10 +16,32 @@ namespace PeliculasWeb.Repositorio
 
         }
         
-        public async Task<IEnumerable<Pelicula>> GetPeliculasTodoAsync(string url)
+        //public async Task<IEnumerable<Pelicula>> GetPeliculasTodoAsync(string url)
+        //{
+        //    var peticion = new HttpRequestMessage(HttpMethod.Get, url);
+
+        //    var cliente = _clientFactory.CreateClient();
+
+        //    HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+
+        //    if (respuesta.StatusCode == System.Net.HttpStatusCode.OK)
+        //    {
+        //        var jsonString = await respuesta.Content.ReadAsStringAsync();
+        //        // Deserializar a PeliculaResponse
+        //        var peliculaResponse = JsonConvert.DeserializeObject<PeliculaResponse>(jsonString);
+        //        // Devolver la lista de peliculas
+        //        return peliculaResponse?.Items ?? new List<Pelicula>();
+        //    }
+        //    else 
+        //    {
+        //        return new List<Pelicula>();
+        //    }
+        //}
+
+        // version mejorada para soporte de paginacion
+        public async Task<PeliculaResponse> GetPeliculasTodoAsync(string url)
         {
             var peticion = new HttpRequestMessage(HttpMethod.Get, url);
-
             var cliente = _clientFactory.CreateClient();
 
             HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
@@ -29,13 +51,14 @@ namespace PeliculasWeb.Repositorio
                 var jsonString = await respuesta.Content.ReadAsStringAsync();
                 // Deserializar a PeliculaResponse
                 var peliculaResponse = JsonConvert.DeserializeObject<PeliculaResponse>(jsonString);
-                // Devolver la lista de peliculas
-                return peliculaResponse?.Items ?? new List<Pelicula>();
+                // Devolver la lista de películas
+                return peliculaResponse ?? new PeliculaResponse();
             }
-            else 
+            else
             {
-                return new List<Pelicula>();
+                return new PeliculaResponse();
             }
         }
+
     }
 }
